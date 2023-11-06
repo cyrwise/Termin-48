@@ -26,11 +26,15 @@ void generate_rand(int& a, int& b){
 }
 
 void output_array(double interface[][4]){
-    //calling generating random# function
+    //calling generating-random#-function
     int a;
     int b;
     generate_rand(a, b);
+
+    //assigning generated random coordanates with 2
     interface[a][b] = 2;
+
+    //displaying interface
     for (int i = 0; i<=3; i++){
         for (int j = 0; j<=3; j++){
             printf("%.2f\t", interface[i][j]);
