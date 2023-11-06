@@ -3,7 +3,7 @@
 
 int main()
 {
-  std::cout << "hi :3" << std::endl;
+  std::cout << "currently testing github pull requests" << std::endl;
 
   return 0;
 }
