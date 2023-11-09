@@ -55,6 +55,8 @@ int main() {
         }
     }
     while(isGameActive == true);
+
+    return 0;
 }
 
 void generate_rand(int& a, int& b){
