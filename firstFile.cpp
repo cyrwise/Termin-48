@@ -27,21 +27,21 @@ int main() {
     // temporary solution for the player to move in a certain direction
     do {
         char direction;
-        cout << "Direction (U, D, L, R): ";
+        cout << "Direction (W, A, S, D): ";
         cin >> direction;
 
         // these cout statements can be replaced with other things such as running a funciton that actually executes moves
         switch(tolower(direction)) {
-        case 'u':
+        case 'w':
             cout << "up" << endl;
             break;
-        case 'd':
-            cout << "down" << endl;
-            break;
-        case 'l':
+        case 'a':
             cout << "left" << endl;
             break;
-        case 'r':
+        case 's':
+            cout << "down" << endl;
+            break;
+        case 'd':
             cout << "right" << endl;
             break;
         // if the user inputs an invalid direction / does not input a character
