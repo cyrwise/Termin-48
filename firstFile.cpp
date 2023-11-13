@@ -74,6 +74,16 @@ void output_array(double interface[][4]){
     //assigning generated random coordanates with 2
     interface[a][b] = 2;
 
+    //printing score
+    int score;
+    for (int i = 0; i<=3; i++){
+        for (int j = 0; j<=3; j++){
+            score = score + interface[i][j];
+        }
+        cout << endl;
+    }
+    cout << "Score: " << score << endl;
+    
     //displaying interface
     for (int i = 0; i<=3; i++){
         for (int j = 0; j<=3; j++){
@@ -81,6 +91,7 @@ void output_array(double interface[][4]){
         }
         cout << endl;
     }
+
 
 }
 
