@@ -60,14 +60,14 @@ void output_array() {
     else {
         output_array();
     }
-    
+
 }
 
 
 
 void userInput() {
     int turns = 0; // TEMPORARY VARIABLE JUST TO MAKE THE PROGRAM STOP ASKING FOR A DIRECTION AFTER 5 OCCURANCES
-    
+
     do { // temporary solution for the player to move in a certain direction
         char direction;
         cout << UWHT"Direction (W, A, S, D): ";
