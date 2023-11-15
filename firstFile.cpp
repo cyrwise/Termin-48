@@ -4,84 +4,209 @@
 
 using namespace std;
 
-void output_array(double interface[][4]);
-void generate_rand(int& a, int& b);
+void output_array(); // generate a new integer at a random position - print board
+void generate_rand(int& a, int& b); // generate random coordinates for new integer
+void userInput(); // takes user input 
+void moveRight();
+void turnDone(); // counts the score on the board and calls output_array()
 
-int main() {
-    bool isGameActive = true; // Could potentially use this to declare whether the game is active or not. For example if the player has lost yet or not
+#define UWHT "\e[4;37m" // white underline
+#define RESET "\e[0;39m" // reset font changes
+#define BWHT "\e[1;37m" // white bold
+#define BLKB "\e[40m" // black highlight
+#define YELB "\e[43m" // yellow highlight
 
-    srand(time(nullptr));
 
-    //initializing array of zeros
-    double interface[4][4] = {
+
+bool isGameActive = true; // Could potentially use this to declare whether the game is active or not. For example if the player has lost yet or not
+double positions[16]; // just making this a global variable
+double interface[4][4] = { //initializing array of zeros
     {0, 0, 0, 0},
     {0, 0, 0, 0},
     {0, 0, 0, 0},
     {0, 0, 0, 0}
     };
+int score = 2;
 
-    //displaying interface with a 2
-    output_array(interface);
+int main() {
+    srand(time(nullptr));
+    output_array(); //displaying interface with a 2
+    printf(BWHT"Score: %i\n", score); // prints score at the start
+    printf(RESET);
+    userInput(); // takes user input
 
-    int turns = 0; // TEMPORARY VARIABLE JUST TO MAKE THE PROGRAM STOP ASKING FOR A DIRECTION AFTER 3 OCCURANCES
-    // temporary solution for the player to move in a certain direction
-    do {
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+void generate_rand(int& a, int& b) {
+    a = rand() % 4;
+    b = rand() % 4;
+}
+
+void output_array() {
+    int a;
+    int b;
+    generate_rand(a, b);
+
+    if (interface[a][b] == 0) { // if spot is vacant, place the new number, if not, generate a different spot and restart function
+        interface[a][b] = 2; //assigning generated random coordanates with 2
+        for (int i = 0; i < 4; i++) { //display interface
+            for (int j = 0; j < 4; j++) {
+                if (interface[i][j] != 0) {
+                    printf(YELB"%.f\t", interface[i][j]); // make numbers that aren't 0 highlight yellow
+                    printf(RESET);
+                }
+                else {
+                    printf(BLKB"%.f\t", interface[i][j]); // otherwise highlight black
+                    printf(RESET);
+                }
+            }
+            printf("\n");
+        }
+    }
+    else {
+        output_array();
+    }
+    
+}
+
+
+
+void userInput() {
+    int turns = 0; // TEMPORARY VARIABLE JUST TO MAKE THE PROGRAM STOP ASKING FOR A DIRECTION AFTER 5 OCCURANCES
+    
+    do { // temporary solution for the player to move in a certain direction
         char direction;
-        cout << "Direction (W, A, S, D): ";
+        cout << UWHT"Direction (W, A, S, D): ";
         cin >> direction;
+        cout << RESET;
+        printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"); // just makes it so that the board is more visible, less messy from turn to turn
 
         // these cout statements can be replaced with other things such as running a funciton that actually executes moves
         switch(tolower(direction)) {
         case 'w':
-            cout << "up" << endl;
+            printf("up\n");
             break;
         case 'a':
-            cout << "left" << endl;
+            printf("left\n");
             break;
         case 's':
-            cout << "down" << endl;
+            printf("down\n");
             break;
         case 'd':
-            cout << "right" << endl;
+            moveRight();
             break;
         // if the user inputs an invalid direction / does not input a character
         default:
-            cout << "please choose a valid direction" << endl;
+            printf("please choose a valid direction\n");
             break;
         }
         turns++;
-        if(turns >= 3) {
+        if(turns >= 5) {
             isGameActive = false;
         }
     }
     while(isGameActive == true);
 
-    return 0;
 }
 
-void generate_rand(int& a, int& b){
-    //generating random x and y coordinates
-    a = rand() % 4;
-    b = rand() % 4;
-}
+void moveRight() { 
+    // key:
+    // a, b, c, d = numbers/positions that haven't been checked yet
+    // *  = any number that would happen to be in that position
+    // 0 = self-explanatory
+    // if 0 0 0 *, do nothing
+    // if 0 0 * *, do nothing
+    // if 0 * * *, do nothing
+    // if * * * *, do nothing
 
-void output_array(double interface[][4]){
-    //calling generating-random#-function
-    int a;
-    int b;
-    generate_rand(a, b);
-
-    //assigning generated random coordanates with 2
-    interface[a][b] = 2;
-
-    //displaying interface
-    for (int i = 0; i<=3; i++){
-        for (int j = 0; j<=3; j++){
-            printf("%.f\t", interface[i][j]);
+    for (int i = 0; i < 4; i++) {
+        if (interface[i][3] == 0) { // if a b c 0
+            if (interface[i][2] == 0) { // if a b 0 0 
+                if (interface[i][1] == 0) { // if a 0 0 0
+                    swap(interface[i][0], interface[i][3]); // case: * 0 0 0 
+                }
+                else { // if a * 0 0
+                    if (interface[i][0] == 0) { // if 0 * 0 0
+                        swap(interface[i][1], interface[i][3]); // case: 0 * 0 0
+                    }
+                    else { // if * * 0 0
+                        swap(interface[i][1], interface[i][3]);
+                        swap(interface[i][0], interface[i][2]);
+                    }
+                }
+            }
+            else { // if a b * 0
+                if (interface[i][1] == 0) { // if a 0 * 0
+                    if (interface[i][0] == 0) { // if 0 0 * 0
+                        swap(interface[i][2], interface[i][3]); // case: 0 0 * 0
+                    }
+                    else { // if * 0 * 0
+                        swap(interface[i][1], interface[i][3]);
+                        swap(interface[i][0], interface[i][2]); // case * 0 * 0
+                    }
+                }
+                else { // if a * * 0
+                    if (interface[i][0] == 0) { // if 0 * * 0
+                        swap(interface[i][2], interface[i][3]);
+                        swap(interface[i][1], interface[i][2]); // case: 0 * * 0
+                    }
+                    else { // if * * * 0
+                        swap(interface[i][2], interface[i][3]);
+                        swap(interface[i][1], interface[i][2]);
+                        swap(interface[i][0], interface[i][1]); // case: * * * 0
+                    }
+                }
+            }
         }
-        cout << endl;
-    }
+        else {
+            if (interface[i][2] == 0) { // if a b 0 *
+                if (interface[i][1] == 0) { // if a 0 0 *
+                    if (interface[i][0] != 0) { // if NOT 0 0 0 * 
+                        swap(interface[i][0], interface[i][2]); // case: * 0 0 * 
+                    }
+                }
+                else {
+                    if (interface[i][0] == 0) { // if 0 * 0 *
+                        swap(interface[i][1], interface[i][2]); // case: 0 * 0 *
+                    }
+                    else { 
+                        if (interface[i][0] != 0) { // if 2 2 0 2
+                            swap(interface[i][1], interface[i][2]); 
+                            swap(interface[i][0], interface[i][1]); // case: * * 0 *
+                        }
+                    }
+                }
+            }
+            else {
+                if (interface[i][1] == 0) { // a 0 * *
+                    if (interface[i][0] != 0) { // if NOT 0 0 * *
+                        swap(interface[i][0], interface[i][1]); // case: * 0 * *
+                    }
+                }
+            }
+        }
+    } 
 
+    output_array(); // calls function to generate a new random integer and place it on the board - also reprints board
+    turnDone();
 }
 
-
+void turnDone() {
+    score = 0;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            score += interface[i][j];
+        }
+    }
+    printf(BWHT"Score: %i\n", score);
+    printf(RESET);
+}
