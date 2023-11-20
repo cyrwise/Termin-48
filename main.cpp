@@ -11,6 +11,7 @@ void moveUp();
 void moveLeft();
 void moveDown();
 void moveRight();
+void shiftRight();
 void turnDone(); // counts the score on the board and calls output_array()
 
 #define UWHT "\e[4;37m" // white underline
@@ -32,6 +33,10 @@ double interface[4][4] = { //initializing array of zeros
 int score = 2;
 
 int main() {
+    interface[0][0] = 2;
+    interface[0][1] = 4;
+    interface[0][2] = 2;
+    interface[0][3] = 2;
     srand(time(nullptr));
     output_array(); //displaying interface with a 2
     printf(BWHT"Score: %i\n", score); // prints score at the start
@@ -65,9 +70,10 @@ void output_array() {
     int a;
     int b;
     generate_rand(a, b);
-
+/**
     if (interface[a][b] == 0) { // if spot is vacant, place the new number, if not, generate a different spot and restart function
         interface[a][b] = 2; //assigning generated random coordanates with 2
+        */
         for (int i = 0; i < 4; i++) { //display interface
             for (int j = 0; j < 4; j++) {
                 if (interface[i][j] != 0) {
@@ -81,14 +87,13 @@ void output_array() {
             }
             printf("\n");
         }
+         /**
     }
     else {
         output_array();
     }
-
+    */
 }
-
-
 
 void userInput() {
     int turns = 0; // TEMPORARY VARIABLE JUST TO MAKE THE PROGRAM STOP ASKING FOR A DIRECTION AFTER 5 OCCURANCES
@@ -128,78 +133,101 @@ void userInput() {
 
 }
 
-void moveUp() { 
-    // key:
-    // a, b, c, d = numbers/positions that haven't been checked yet
-    // *  = any number that would happen to be in that position
-    // 0 = self-explanatory
-    // if 0 0 0 *, do nothing
-    // if 0 0 * *, do nothing
-    // if 0 * * *, do nothing
-    // if * * * *, do nothing
 
-    for (int i = 0; i < 4; i++) { // do this for 4 rows
-        if (interface[0][i] == 0) { // if a b c 0
-            if (interface[1][i] == 0) { // if a b 0 0 
-                if (interface[2][i] == 0) { // if a 0 0 0
-                    swap(interface[3][i], interface[0][i]); // case: * 0 0 0 
+
+void moveRight() {
+
+    double newVal = 0;
+    if (interface[0][3] == interface[0][2]) { // 2 4 2 2 
+        newVal = interface[0][3] + interface[0][2];
+        interface[0][3] = newVal;
+        interface[0][2] = 0; // 2 4 0 4
+    }
+
+    shiftRight(); // 0 2 4 4
+
+    if (interface[0][1] == interface[0][2]) { 
+        newVal = interface[0][1] + interface[0][2];
+        interface[0][2] = newVal;
+        interface[0][1] = 0; 
+    }
+
+    shiftRight();
+
+    if (interface[0][0] == interface[0][1]) { 
+        newVal = interface[0][0] + interface[0][1];
+        interface[0][1] = newVal;
+        interface[0][0] = 0; 
+    }
+
+    output_array(); // calls function to generate a new random integer and place it on the board - also reprints board
+    turnDone();
+}
+
+void moveUp() { 
+
+    for (int i = 0; i < 4; i++) {
+        if (interface[0][i] == 0) { 
+            if (interface[1][i] == 0) { 
+                if (interface[2][i] == 0) {
+                    swap(interface[3][i], interface[0][i]); 
                 }
-                else { // if a * 0 0
-                    if (interface[3][i] == 0) { // if 0 * 0 0
-                        swap(interface[2][i], interface[0][i]); // case: 0 * 0 0
+                else {
+                    if (interface[3][i] == 0) { 
+                        swap(interface[2][i], interface[0][i]); 
                     }
-                    else { // if * * 0 0
+                    else {
                         swap(interface[2][i], interface[0][i]);
                         swap(interface[3][i], interface[1][i]);
                     }
                 }
             }
-            else { // if a b * 0
-                if (interface[2][i] == 0) { // if a 0 * 0
-                    if (interface[3][i] == 0) { // if 0 0 * 0
-                        swap(interface[1][i], interface[0][i]); // case: 0 0 * 0
+            else { 
+                if (interface[2][i] == 0) { 
+                    if (interface[3][i] == 0) { 
+                        swap(interface[1][i], interface[0][i]);
                     }
-                    else { // if * 0 * 0
+                    else {
                         swap(interface[2][i], interface[0][i]);
-                        swap(interface[3][i], interface[1][i]); // case * 0 * 0
+                        swap(interface[3][i], interface[1][i]);
                     }
                 }
-                else { // if a * * 0
-                    if (interface[0][i] == 0) { // if 0 * * 0
-                        swap(interface[1][i], interface[0][i]);
-                        swap(interface[2][i], interface[1][i]); // case: 0 * * 0
-                    }
-                    else { // if * * * 0
+                else {
+                    if (interface[0][i] == 0) {
                         swap(interface[1][i], interface[0][i]);
                         swap(interface[2][i], interface[1][i]);
-                        swap(interface[3][i], interface[2][i]); // case: * * * 0
+                    }
+                    else { 
+                        swap(interface[1][i], interface[0][i]);
+                        swap(interface[2][i], interface[1][i]);
+                        swap(interface[3][i], interface[2][i]); 
                     }
                 }
             }
         }
         else {
-            if (interface[1][i] == 0) { // if a b 0 *
-                if (interface[2][i] == 0) { // if a 0 0 *
-                    if (interface[3][i] != 0) { // if NOT 0 0 0 * 
-                        swap(interface[3][i], interface[1][i]); // case: * 0 0 * 
+            if (interface[1][i] == 0) { 
+                if (interface[2][i] == 0) { 
+                    if (interface[3][i] != 0) { 
+                        swap(interface[3][i], interface[1][i]); 
                     }
                 }
                 else {
-                    if (interface[3][i] == 0) { // if 0 * 0 *
-                        swap(interface[2][i], interface[1][i]); // case: 0 * 0 *
+                    if (interface[3][i] == 0) { 
+                        swap(interface[2][i], interface[1][i]); 
                     }
                     else { 
-                        if (interface[3][i] != 0) { // if 2 2 0 2
+                        if (interface[3][i] != 0) { 
                             swap(interface[2][i], interface[1][i]); 
-                            swap(interface[3][i], interface[2][i]); // case: * * 0 *
+                            swap(interface[3][i], interface[2][i]); 
                         }
                     }
                 }
             }
             else {
-                if (interface[2][i] == 0) { // a 0 * *
-                    if (interface[3][i] != 0) { // if NOT 0 0 * *
-                        swap(interface[3][i], interface[2][i]); // case: * 0 * *
+                if (interface[2][i] == 0) { 
+                    if (interface[3][i] != 0) { 
+                        swap(interface[3][i], interface[2][i]); 
                     }
                 }
             }
@@ -211,77 +239,69 @@ void moveUp() {
 }
 
 void moveLeft() { 
-    // key:
-    // a, b, c, d = numbers/positions that haven't been checked yet
-    // *  = any number that would happen to be in that position
-    // 0 = self-explanatory
-    // if 0 0 0 *, do nothing
-    // if 0 0 * *, do nothing
-    // if 0 * * *, do nothing
-    // if * * * *, do nothing
 
-    for (int i = 0; i < 4; i++) { // do this for 4 rows
-        if (interface[i][0] == 0) { // if a b c 0
-            if (interface[i][1] == 0) { // if a b 0 0 
-                if (interface[i][2] == 0) { // if a 0 0 0
-                    swap(interface[i][3], interface[i][0]); // case: * 0 0 0 
+    for (int i = 0; i < 4; i++) { 
+        if (interface[i][0] == 0) { 
+            if (interface[i][1] == 0) { 
+                if (interface[i][2] == 0) { 
+                    swap(interface[i][3], interface[i][0]); 
                 }
-                else { // if a * 0 0
-                    if (interface[i][3] == 0) { // if 0 * 0 0
-                        swap(interface[i][2], interface[i][0]); // case: 0 * 0 0
+                else { 
+                    if (interface[i][3] == 0) { 
+                        swap(interface[i][2], interface[i][0]); 
                     }
-                    else { // if * * 0 0
+                    else { 
                         swap(interface[i][2], interface[i][0]);
                         swap(interface[i][3], interface[i][1]);
                     }
                 }
             }
-            else { // if a b * 0
-                if (interface[i][2] == 0) { // if a 0 * 0
-                    if (interface[i][3] == 0) { // if 0 0 * 0
-                        swap(interface[i][1], interface[i][0]); // case: 0 0 * 0
+            else {
+                if (interface[i][2] == 0) { 
+                    if (interface[i][3] == 0) {
+                        swap(interface[i][1], interface[i][0]); 
                     }
-                    else { // if * 0 * 0
+                    else { 
                         swap(interface[i][2], interface[i][0]);
-                        swap(interface[i][3], interface[i][1]); // case * 0 * 0
+                        swap(interface[i][3], interface[i][1]);
                     }
                 }
-                else { // if a * * 0
-                    if (interface[i][0] == 0) { // if 0 * * 0
+                else {
+                    if (interface[i][0] == 0) { 
                         swap(interface[i][1], interface[i][0]);
-                        swap(interface[i][2], interface[i][1]); // case: 0 * * 0
+                        swap(interface[i][2], interface[i][1]); 
                     }
-                    else { // if * * * 0
+                    else { 
                         swap(interface[i][1], interface[i][0]);
                         swap(interface[i][2], interface[i][1]);
-                        swap(interface[i][3], interface[i][2]); // case: * * * 0
+                        swap(interface[i][3], interface[i][2]); 
                     }
                 }
             }
         }
         else {
-            if (interface[i][1] == 0) { // if a b 0 *
-                if (interface[i][2] == 0) { // if a 0 0 *
-                    if (interface[i][3] != 0) { // if NOT 0 0 0 * 
-                        swap(interface[i][3], interface[i][1]); // case: * 0 0 * 
+            if (interface[i][1] == 0) { 
+                if (interface[i][2] == 0) { 
+                    if (interface[i][3] != 0) { 
+                        swap(interface[i][3], interface[i][1]); 
                     }
                 }
                 else {
-                    if (interface[i][3] == 0) { // if 0 * 0 *
-                        swap(interface[i][2], interface[i][1]); // case: 0 * 0 *
+                    if (interface[i][3] == 0) { 
+                        swap(interface[i][2], interface[i][1]); 
                     }
                     else { 
-                        if (interface[i][3] != 0) { // if 2 2 0 2
+                        if (interface[i][3] != 0) { 
                             swap(interface[i][2], interface[i][1]); 
-                            swap(interface[i][3], interface[i][2]); // case: * * 0 *
+                            swap(interface[i][3], interface[i][2]); 
                         }
                     }
                 }
             }
             else {
-                if (interface[i][2] == 0) { // a 0 * *
-                    if (interface[i][3] != 0) { // if NOT 0 0 * *
-                        swap(interface[i][3], interface[i][2]); // case: * 0 * *
+                if (interface[i][2] == 0) { 
+                    if (interface[i][3] != 0) { 
+                        swap(interface[i][3], interface[i][2]); 
                     }
                 }
             }
@@ -292,7 +312,7 @@ void moveLeft() {
     turnDone();
 }
 
-void moveRight() { 
+void shiftRight() { 
     // key:
     // a, b, c, d = numbers/positions that haven't been checked yet
     // *  = any number that would happen to be in that position
@@ -369,83 +389,72 @@ void moveRight() {
             }
         }
     } 
-
-    output_array(); // calls function to generate a new random integer and place it on the board - also reprints board
-    turnDone();
 }
 
 void moveDown() { 
-    // key:
-    // a, b, c, d = numbers/positions that haven't been checked yet
-    // *  = any number that would happen to be in that position
-    // 0 = self-explanatory
-    // if 0 0 0 *, do nothing
-    // if 0 0 * *, do nothing
-    // if 0 * * *, do nothing
-    // if * * * *, do nothing
 
-    for (int i = 0; i < 4; i++) { // do this for 4 rows
-        if (interface[3][i] == 0) { // if a b c 0
-            if (interface[2][i] == 0) { // if a b 0 0 
-                if (interface[1][i] == 0) { // if a 0 0 0
-                    swap(interface[0][i], interface[3][i]); // case: * 0 0 0 
+    for (int i = 0; i < 4; i++) { 
+        if (interface[3][i] == 0) { 
+            if (interface[2][i] == 0) {  
+                if (interface[1][i] == 0) { 
+                    swap(interface[0][i], interface[3][i]); 
                 }
-                else { // if a * 0 0
-                    if (interface[0][i] == 0) { // if 0 * 0 0
-                        swap(interface[1][i], interface[3][i]); // case: 0 * 0 0
+                else { 
+                    if (interface[0][i] == 0) { 
+                        swap(interface[1][i], interface[3][i]); 
                     }
-                    else { // if * * 0 0
+                    else { 
                         swap(interface[1][i], interface[3][i]);
                         swap(interface[0][i], interface[2][i]);
                     }
                 }
             }
-            else { // if a b * 0
-                if (interface[1][i] == 0) { // if a 0 * 0
-                    if (interface[0][i] == 0) { // if 0 0 * 0
-                        swap(interface[2][i], interface[3][i]); // case: 0 0 * 0
+            else {  
+                if (interface[1][i] == 0) { 
+                    if (interface[0][i] == 0) { 
+                        swap(interface[2][i], interface[3][i]); 
                     }
-                    else { // if * 0 * 0
+                    else {  
                         swap(interface[1][i], interface[3][i]);
-                        swap(interface[0][i], interface[2][i]); // case * 0 * 0
+                        swap(interface[0][i], interface[2][i]); 
                     }
                 }
-                else { // if a * * 0
-                    if (interface[0][i] == 0) { // if 0 * * 0
+                else { 
+                    if (interface[0][i] == 0) {  
                         swap(interface[2][i], interface[3][i]);
-                        swap(interface[1][i], interface[2][i]); // case: 0 * * 0
+                        swap(interface[1][i], interface[2][i]); 
                     }
-                    else { // if * * * 0
+                    else {  
                         swap(interface[2][i], interface[3][i]);
                         swap(interface[1][i], interface[2][i]);
-                        swap(interface[0][i], interface[1][i]); // case: * * * 0
+                        swap(interface[0][i], interface[1][i]);  
                     }
                 }
             }
         }
         else {
-            if (interface[2][i] == 0) { // if a b 0 *
-                if (interface[1][i] == 0) { // if a 0 0 *
-                    if (interface[0][i] != 0) { // if NOT 0 0 0 * 
-                        swap(interface[0][i], interface[2][i]); // case: * 0 0 * 
+            if (interface[2][i] == 0) {  
+                if (interface[1][i] == 0) { 
+                    if (interface[0][i] != 0) { 
+                        swap(interface[0][i], interface[2][i]); 
                     }
                 }
                 else {
-                    if (interface[0][i] == 0) { // if 0 * 0 *
-                        swap(interface[1][i], interface[2][i]); // case: 0 * 0 *
+                    if (interface[0][i] == 0) { 
+                        swap(interface[1][i], interface[2][i]);
                     }
                     else { 
-                        if (interface[0][i] != 0) { // if 2 2 0 2
+                        if (interface[0][i] != 0) { 
                             swap(interface[1][i], interface[2][i]); 
-                            swap(interface[0][i], interface[1][i]); // case: * * 0 *
+                            swap(interface[0][i], interface[1][i]);  
                         }
                     }
                 }
             }
             else {
-                if (interface[1][i] == 0) { // a 0 * *
-                    if (interface[0][i] != 0) { // if NOT 0 0 * *
-                        swap(interface[0][i], interface[1][i]); // case: * 0 * *
+                if (interface[1][i] == 0) { 
+                    if (interface[0][i] != 0) { 
+                        swap(interface[0][i], interface[1][i]); 
                     }
                 }
             }
