@@ -138,33 +138,29 @@ void userInput() {
 void moveRight() {
 
     double newVal = 0;
-    for (int i = 0; i < 4; i++){
-
+    for (int i = 0; i < 4; i++) {
         if (interface[i][3] == interface[i][2]) { // 2 4 2 2 
-        newVal = interface[i][3] + interface[i][2];
-        interface[i][3] = newVal;
-        interface[i][2] = 0; // 2 4 0 4
+            newVal = interface[i][3] + interface[i][2];
+            interface[i][3] = newVal;
+            interface[i][2] = 0; // 2 4 0 4
+        }
+
+        shiftRight(); // 0 2 4 4
+
+        if (interface[i][1] == interface[i][2]) { 
+            newVal = interface[i][1] + interface[i][2];
+            interface[i][2] = newVal;
+            interface[i][1] = 0; 
+        }
+
+        shiftRight();
+
+        if (interface[i][0] == interface[i][1]) { 
+            newVal = interface[i][0] + interface[i][1];
+            interface[i][1] = newVal;
+            interface[i][0] = 0; 
+        }
     }
-
-    shiftRight(); // 0 2 4 4
-
-    if (interface[i][1] == interface[i][2]) { 
-        newVal = interface[i][1] + interface[i][2];
-        interface[i][2] = newVal;
-        interface[i][1] = 0; 
-    }
-
-    shiftRight();
-
-    if (interface[i][0] == interface[i][1]) { 
-        newVal = interface[i][0] + interface[i][1];
-        interface[i][1] = newVal;
-        interface[i][0] = 0; 
-    }
-
-    }
-    
-
     output_array(); // calls function to generate a new random integer and place it on the board - also reprints board
     turnDone();
 }
@@ -275,7 +271,6 @@ void moveUp() {
         }
 
     }
-
     output_array(); // calls function to generate a new random integer and place it on the board - also reprints board
     turnDone();
 }
@@ -349,9 +344,6 @@ void shiftUp() {
             }
         }
     } 
-
-    output_array(); // calls function to generate a new random integer and place it on the board - also reprints board
-    turnDone();
 }
 
 
@@ -380,10 +372,9 @@ void moveLeft() {
             interface[i][2] = newVal;
             interface[i][3] = 0; 
         }
-
     }
-
-
+    output_array(); // calls function to generate a new random integer and place it on the board - also reprints board
+    turnDone();
 }
 
 void shiftLeft() { 
@@ -485,7 +476,6 @@ void moveDown() {
         }
 
     }
-
     output_array(); // calls function to generate a new random integer and place it on the board - also reprints board
     turnDone();
 }
@@ -559,9 +549,6 @@ void shiftDown() {
             }
         }
     } 
-
-    output_array(); // calls function to generate a new random integer and place it on the board - also reprints board
-    turnDone();
 }
 
 void turnDone() {
