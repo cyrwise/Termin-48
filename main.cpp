@@ -8,8 +8,11 @@ void output_array(); // generate a new integer at a random position - print boar
 void generate_rand(int& a, int& b); // generate random coordinates for new integer
 void userInput(); // takes user input 
 void moveUp();
+void shiftUp();
 void moveLeft();
+void shiftLeft();
 void moveDown();
+void shiftDown();
 void moveRight();
 void shiftRight();
 void turnDone(); // counts the score on the board and calls output_array()
@@ -33,10 +36,7 @@ double interface[4][4] = { //initializing array of zeros
 int score = 2;
 
 int main() {
-    interface[0][0] = 2;
-    interface[0][1] = 4;
-    interface[0][2] = 2;
-    interface[0][3] = 2;
+
     srand(time(nullptr));
     output_array(); //displaying interface with a 2
     printf(BWHT"Score: %i\n", score); // prints score at the start
@@ -70,10 +70,10 @@ void output_array() {
     int a;
     int b;
     generate_rand(a, b);
-/**
+
     if (interface[a][b] == 0) { // if spot is vacant, place the new number, if not, generate a different spot and restart function
         interface[a][b] = 2; //assigning generated random coordanates with 2
-        */
+        
         for (int i = 0; i < 4; i++) { //display interface
             for (int j = 0; j < 4; j++) {
                 if (interface[i][j] != 0) {
@@ -87,12 +87,12 @@ void output_array() {
             }
             printf("\n");
         }
-         /**
+         
     }
     else {
         output_array();
     }
-    */
+    
 }
 
 void userInput() {
@@ -138,175 +138,32 @@ void userInput() {
 void moveRight() {
 
     double newVal = 0;
-    if (interface[0][3] == interface[0][2]) { // 2 4 2 2 
-        newVal = interface[0][3] + interface[0][2];
-        interface[0][3] = newVal;
-        interface[0][2] = 0; // 2 4 0 4
+    for (int i = 0; i < 4; i++){
+
+        if (interface[i][3] == interface[i][2]) { // 2 4 2 2 
+        newVal = interface[i][3] + interface[i][2];
+        interface[i][3] = newVal;
+        interface[i][2] = 0; // 2 4 0 4
     }
 
     shiftRight(); // 0 2 4 4
 
-    if (interface[0][1] == interface[0][2]) { 
-        newVal = interface[0][1] + interface[0][2];
-        interface[0][2] = newVal;
-        interface[0][1] = 0; 
+    if (interface[i][1] == interface[i][2]) { 
+        newVal = interface[i][1] + interface[i][2];
+        interface[i][2] = newVal;
+        interface[i][1] = 0; 
     }
 
     shiftRight();
 
-    if (interface[0][0] == interface[0][1]) { 
-        newVal = interface[0][0] + interface[0][1];
-        interface[0][1] = newVal;
-        interface[0][0] = 0; 
+    if (interface[i][0] == interface[i][1]) { 
+        newVal = interface[i][0] + interface[i][1];
+        interface[i][1] = newVal;
+        interface[i][0] = 0; 
     }
 
-    output_array(); // calls function to generate a new random integer and place it on the board - also reprints board
-    turnDone();
-}
-
-void moveUp() { 
-
-    for (int i = 0; i < 4; i++) {
-        if (interface[0][i] == 0) { 
-            if (interface[1][i] == 0) { 
-                if (interface[2][i] == 0) {
-                    swap(interface[3][i], interface[0][i]); 
-                }
-                else {
-                    if (interface[3][i] == 0) { 
-                        swap(interface[2][i], interface[0][i]); 
-                    }
-                    else {
-                        swap(interface[2][i], interface[0][i]);
-                        swap(interface[3][i], interface[1][i]);
-                    }
-                }
-            }
-            else { 
-                if (interface[2][i] == 0) { 
-                    if (interface[3][i] == 0) { 
-                        swap(interface[1][i], interface[0][i]);
-                    }
-                    else {
-                        swap(interface[2][i], interface[0][i]);
-                        swap(interface[3][i], interface[1][i]);
-                    }
-                }
-                else {
-                    if (interface[0][i] == 0) {
-                        swap(interface[1][i], interface[0][i]);
-                        swap(interface[2][i], interface[1][i]);
-                    }
-                    else { 
-                        swap(interface[1][i], interface[0][i]);
-                        swap(interface[2][i], interface[1][i]);
-                        swap(interface[3][i], interface[2][i]); 
-                    }
-                }
-            }
-        }
-        else {
-            if (interface[1][i] == 0) { 
-                if (interface[2][i] == 0) { 
-                    if (interface[3][i] != 0) { 
-                        swap(interface[3][i], interface[1][i]); 
-                    }
-                }
-                else {
-                    if (interface[3][i] == 0) { 
-                        swap(interface[2][i], interface[1][i]); 
-                    }
-                    else { 
-                        if (interface[3][i] != 0) { 
-                            swap(interface[2][i], interface[1][i]); 
-                            swap(interface[3][i], interface[2][i]); 
-                        }
-                    }
-                }
-            }
-            else {
-                if (interface[2][i] == 0) { 
-                    if (interface[3][i] != 0) { 
-                        swap(interface[3][i], interface[2][i]); 
-                    }
-                }
-            }
-        }
-    } 
-
-    output_array(); // calls function to generate a new random integer and place it on the board - also reprints board
-    turnDone();
-}
-
-void moveLeft() { 
-
-    for (int i = 0; i < 4; i++) { 
-        if (interface[i][0] == 0) { 
-            if (interface[i][1] == 0) { 
-                if (interface[i][2] == 0) { 
-                    swap(interface[i][3], interface[i][0]); 
-                }
-                else { 
-                    if (interface[i][3] == 0) { 
-                        swap(interface[i][2], interface[i][0]); 
-                    }
-                    else { 
-                        swap(interface[i][2], interface[i][0]);
-                        swap(interface[i][3], interface[i][1]);
-                    }
-                }
-            }
-            else {
-                if (interface[i][2] == 0) { 
-                    if (interface[i][3] == 0) {
-                        swap(interface[i][1], interface[i][0]); 
-                    }
-                    else { 
-                        swap(interface[i][2], interface[i][0]);
-                        swap(interface[i][3], interface[i][1]);
-                    }
-                }
-                else {
-                    if (interface[i][0] == 0) { 
-                        swap(interface[i][1], interface[i][0]);
-                        swap(interface[i][2], interface[i][1]); 
-                    }
-                    else { 
-                        swap(interface[i][1], interface[i][0]);
-                        swap(interface[i][2], interface[i][1]);
-                        swap(interface[i][3], interface[i][2]); 
-                    }
-                }
-            }
-        }
-        else {
-            if (interface[i][1] == 0) { 
-                if (interface[i][2] == 0) { 
-                    if (interface[i][3] != 0) { 
-                        swap(interface[i][3], interface[i][1]); 
-                    }
-                }
-                else {
-                    if (interface[i][3] == 0) { 
-                        swap(interface[i][2], interface[i][1]); 
-                    }
-                    else { 
-                        if (interface[i][3] != 0) { 
-                            swap(interface[i][2], interface[i][1]); 
-                            swap(interface[i][3], interface[i][2]); 
-                        }
-                    }
-                }
-            }
-            else {
-                if (interface[i][2] == 0) { 
-                    if (interface[i][3] != 0) { 
-                        swap(interface[i][3], interface[i][2]); 
-                    }
-                }
-            }
-        }
-    } 
+    }
+    
 
     output_array(); // calls function to generate a new random integer and place it on the board - also reprints board
     turnDone();
@@ -391,7 +248,249 @@ void shiftRight() {
     } 
 }
 
-void moveDown() { 
+void moveUp() {
+
+    double newVal = 0;
+    for (int i = 0; i < 4; i++){
+
+        if (interface[0][i] == interface[1][i]) {  
+            newVal = interface[1][i] + interface[0][i];
+            interface[0][i] = newVal;
+            interface[1][i] = 0; 
+        }
+
+        shiftUp(); 
+
+        if (interface[2][i] == interface[1][i]) { 
+            newVal = interface[2][i] + interface[1][i];
+            interface[1][i] = newVal;
+            interface[2][i] = 0; 
+        }
+
+        shiftUp(); 
+        if (interface[3][i] == interface[2][i]) { 
+            newVal = interface[3][i] + interface[2][i];
+            interface[2][i] = newVal;
+            interface[3][i] = 0; 
+        }
+
+    }
+
+    output_array(); // calls function to generate a new random integer and place it on the board - also reprints board
+    turnDone();
+}
+
+void shiftUp() { 
+
+    for (int i = 0; i < 4; i++) {
+        if (interface[0][i] == 0) { 
+            if (interface[1][i] == 0) { 
+                if (interface[2][i] == 0) {
+                    swap(interface[3][i], interface[0][i]); 
+                }
+                else {
+                    if (interface[3][i] == 0) { 
+                        swap(interface[2][i], interface[0][i]); 
+                    }
+                    else {
+                        swap(interface[2][i], interface[0][i]);
+                        swap(interface[3][i], interface[1][i]);
+                    }
+                }
+            }
+            else { 
+                if (interface[2][i] == 0) { 
+                    if (interface[3][i] == 0) { 
+                        swap(interface[1][i], interface[0][i]);
+                    }
+                    else {
+                        swap(interface[2][i], interface[0][i]);
+                        swap(interface[3][i], interface[1][i]);
+                    }
+                }
+                else {
+                    if (interface[0][i] == 0) {
+                        swap(interface[1][i], interface[0][i]);
+                        swap(interface[2][i], interface[1][i]);
+                    }
+                    else { 
+                        swap(interface[1][i], interface[0][i]);
+                        swap(interface[2][i], interface[1][i]);
+                        swap(interface[3][i], interface[2][i]); 
+                    }
+                }
+            }
+        }
+        else {
+            if (interface[1][i] == 0) { 
+                if (interface[2][i] == 0) { 
+                    if (interface[3][i] != 0) { 
+                        swap(interface[3][i], interface[1][i]); 
+                    }
+                }
+                else {
+                    if (interface[3][i] == 0) { 
+                        swap(interface[2][i], interface[1][i]); 
+                    }
+                    else { 
+                        if (interface[3][i] != 0) { 
+                            swap(interface[2][i], interface[1][i]); 
+                            swap(interface[3][i], interface[2][i]); 
+                        }
+                    }
+                }
+            }
+            else {
+                if (interface[2][i] == 0) { 
+                    if (interface[3][i] != 0) { 
+                        swap(interface[3][i], interface[2][i]); 
+                    }
+                }
+            }
+        }
+    } 
+
+    output_array(); // calls function to generate a new random integer and place it on the board - also reprints board
+    turnDone();
+}
+
+
+void moveLeft() {
+
+    double newVal = 0;
+    for (int i = 0; i < 4; i++){
+
+        if (interface[i][0] == interface[i][1]) { // 2 2 4 2 
+            newVal = interface[i][0] + interface[i][1];
+            interface[i][0] = newVal;
+            interface[i][1] = 0; // 4 0 4 2
+        }
+
+        shiftLeft(); // 4 4 0 2
+
+        if (interface[i][1] == interface[i][2]) { 
+            newVal = interface[i][1] + interface[i][2];
+            interface[i][1] = newVal;
+            interface[i][2] = 0; 
+        }
+
+        shiftLeft(); // 4 4 2 0
+        if (interface[i][2] == interface[i][2]) { 
+            newVal = interface[i][2] + interface[i][3];
+            interface[i][2] = newVal;
+            interface[i][3] = 0; 
+        }
+
+    }
+
+
+}
+
+void shiftLeft() { 
+
+    for (int i = 0; i < 4; i++) { 
+        if (interface[i][0] == 0) { 
+            if (interface[i][1] == 0) { 
+                if (interface[i][2] == 0) { 
+                    swap(interface[i][3], interface[i][0]); 
+                }
+                else { 
+                    if (interface[i][3] == 0) { 
+                        swap(interface[i][2], interface[i][0]); 
+                    }
+                    else { 
+                        swap(interface[i][2], interface[i][0]);
+                        swap(interface[i][3], interface[i][1]);
+                    }
+                }
+            }
+            else {
+                if (interface[i][2] == 0) { 
+                    if (interface[i][3] == 0) {
+                        swap(interface[i][1], interface[i][0]); 
+                    }
+                    else { 
+                        swap(interface[i][2], interface[i][0]);
+                        swap(interface[i][3], interface[i][1]);
+                    }
+                }
+                else {
+                    if (interface[i][0] == 0) { 
+                        swap(interface[i][1], interface[i][0]);
+                        swap(interface[i][2], interface[i][1]); 
+                    }
+                    else { 
+                        swap(interface[i][1], interface[i][0]);
+                        swap(interface[i][2], interface[i][1]);
+                        swap(interface[i][3], interface[i][2]); 
+                    }
+                }
+            }
+        }
+        else {
+            if (interface[i][1] == 0) { 
+                if (interface[i][2] == 0) { 
+                    if (interface[i][3] != 0) { 
+                        swap(interface[i][3], interface[i][1]); 
+                    }
+                }
+                else {
+                    if (interface[i][3] == 0) { 
+                        swap(interface[i][2], interface[i][1]); 
+                    }
+                    else { 
+                        if (interface[i][3] != 0) { 
+                            swap(interface[i][2], interface[i][1]); 
+                            swap(interface[i][3], interface[i][2]); 
+                        }
+                    }
+                }
+            }
+            else {
+                if (interface[i][2] == 0) { 
+                    if (interface[i][3] != 0) { 
+                        swap(interface[i][3], interface[i][2]); 
+                    }
+                }
+            }
+        }
+    } 
+
+}
+
+void moveDown() {
+
+    double newVal = 0;
+    for (int i = 0; i < 4; i++){
+
+        if (interface[3][i] == interface[2][i]) { // 2 2 4 2 
+            newVal = interface[3][i] + interface[2][i];
+            interface[3][i] = newVal;
+            interface[2][i] = 0; // 4 0 4 2
+        }
+
+        shiftDown(); // 4 4 0 2
+
+        if (interface[2][i] == interface[1][i]) { 
+            newVal = interface[2][i] + interface[1][i];
+            interface[2][i] = newVal;
+            interface[1][i] = 0; 
+        }
+
+        shiftDown(); // 4 4 2 0
+        if (interface[1][i] == interface[0][i]) { 
+            newVal = interface[1][i] + interface[0][i];
+            interface[1][i] = newVal;
+            interface[0][i] = 0; 
+        }
+
+    }
+
+    output_array(); // calls function to generate a new random integer and place it on the board - also reprints board
+    turnDone();
+}
+
+void shiftDown() { 
 
     for (int i = 0; i < 4; i++) { 
         if (interface[3][i] == 0) { 
