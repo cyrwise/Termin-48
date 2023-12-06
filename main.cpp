@@ -128,13 +128,25 @@ void output_array() {
 }
 
 void isPossibleMovement() {
+    possibleMovement = true; // Assume there is a possible movement
+
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
-            if (interface[i][j] != interface[i+1][j] || interface[i-1][j] || interface[i][j+1] || interface[i][j-1])
-                possibleMovement = false;
+            // Check if there is a neighboring cell with the same value
+            if ((i < 3 && interface[i][j] == interface[i + 1][j]) ||
+                (i > 0 && interface[i][j] == interface[i - 1][j]) ||
+                (j < 3 && interface[i][j] == interface[i][j + 1]) ||
+                (j > 0 && interface[i][j] == interface[i][j - 1])) {
+                // There is a possible movement
+                return;
+            }
         }
     }
+
+    // No possible movement found
+    possibleMovement = false;
 }
+
 
 
 void userInput() {
